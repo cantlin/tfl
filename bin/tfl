@@ -1,0 +1,32 @@
+#! /usr/bin/env ruby
+
+Dir["#{File.expand_path(File.dirname(__FILE__))}/../lib/*.rb"].each {|f| require f }
+
+app_name, method = ARGV.shift, ARGV.shift
+
+if app_name.nil? || method.nil?
+    $stderr.puts "Please supply an app name and something for it to do, like this:", "",
+                 "    $ tfl main_line departures Homerton", ""
+    exit 1
+end
+
+begin
+    app = Kernel.const_get(app_name.split('_').map(&:capitalize).join)
+rescue NameError
+    $stderr.puts "No such app \"#{app_name}\" :("
+    exit 1
+end
+
+instance = app.new
+
+if !instance.respond_to? method
+    $stderr.puts "\"#{app_name}\" doesn't know what to do about \"#{method}\" :("
+    exit 1
+end
+
+# begin
+    instance.send(method, *ARGV)
+# rescue ArgumentError => e
+    # $stderr.puts "\"#{app_name}\" says: #{e.message}"
+    # exit 1
+# end

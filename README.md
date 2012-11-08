@@ -1,4 +1,4 @@
 tfl
 ===
 
-tfl command line tool
+``$ bin/tfl main_line departures homerton``
